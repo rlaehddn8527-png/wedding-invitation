@@ -1,17 +1,21 @@
 window.addEventListener('load', () => {
     const introScreen = document.getElementById('introScreen');
 
-    // 총 재생 시간: 
-    // 사진1(3초) + 사진2(3초) + 사진3(등장2초) + 글씨쓰기(2초) + 감상(2초) = 약 12초
+    // 총 재생 시간: 7초 (7000ms)
+    // 0~2초: 사진1
+    // 2~4초: 사진2
+    // 4~6초: 사진3 + 글씨 타이핑
+    // 6~7초: 감상 (1초)
+    // 7초: 종료
     
     setTimeout(() => {
         introScreen.classList.add('fade-out');
         
         setTimeout(() => {
              introScreen.style.display = 'none';
-        }, 1500); // 페이드아웃 애니메이션 시간(1.5초)과 맞춤
+        }, 1000); // 페이드아웃은 1초 정도로 짧고 굵게
 
-    }, 12000); // 12000ms = 12초 뒤에 인트로 종료
+    }, 7000); // ★ 여기를 7000으로 수정
 });
 
 function copyText(text) {
