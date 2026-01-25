@@ -62,3 +62,14 @@ hr {
     color: #555;
     line-height: 1.8;
 }
+
+/* style.css 맨 아래 추가 */
+
+/* 메인 사진 스타일 */
+.main-photo {
+    width: 100%;       /* 가로 꽉 차게 */
+    height: auto;      /* 세로 비율 자동 */
+    border-radius: 10px; /* 모서리 둥글게 (선택사항) */
+    margin-bottom: 30px; /* 글씨랑 간격 띄우기 */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 살짝 그림자 */
+}
