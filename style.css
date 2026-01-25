@@ -32,13 +32,23 @@ body {
 }
 
 h1 {
-    font-size: 36px;
+    font-size: 24px;   /* 이름 크기를 24px로 줄임 (기존 30~40px) */
     color: #333;
-    margin: 10px 0 40px 0;
-    font-family: serif; /* 명조체 계열 */
+    margin: 20px 0;
+    font-family: 'Noto Sans KR', sans-serif; /* 한글이라 명조체 대신 고딕 계열 추천 */
+    font-weight: 500;  /* 너무 두껍지 않게 */
+    display: flex;     /* 가로 정렬을 위해 추가 */
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 세로 중앙 정렬 (하트랑 높이 맞추기) */
+    gap: 10px;         /* 이름과 하트 사이 간격 */
 }
 
-.heart { color: #ff6b6b; }
+.heart {
+    color: #ff6b6b;
+    font-size: 36px;   /* 하트는 이름보다 훨씬 크게 (36px) */
+    line-height: 1;    /* 하트 높이 간격 조정 */
+    margin-top: -5px;  /* 시각적으로 중앙에 오도록 미세 조정 */
+}
 
 .info-box {
     border: 1px solid #ddd;
@@ -195,4 +205,496 @@ hr {
 
 @keyframes fadeOutScreen {
     to { opacity: 0; visibility: hidden; }
+}
+
+/* style.css 추가 */
+
+/* --- 신랑/신부 프로필 --- */
+.profile-section {
+    display: flex;           /* 가로 나란히 배치 */
+    justify-content: center; /* 중앙 정렬 */
+    gap: 40px;               /* 두 사람 사이 간격 */
+    margin: 30px 0;
+}
+
+.person {
+    text-align: center;
+}
+
+/* 동그란 프로필 사진 틀 */
+.img-frame {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;      /* 완전 원형 */
+    overflow: hidden;        /* 사진이 튀어나오면 자름 */
+    margin: 0 auto 10px auto;
+    border: 3px solid #f0f0f0; /* 사진 테두리 (선택) */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* 비율 유지하며 꽉 채우기 */
+}
+
+.person h3 {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.role {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase; /* 대문자로 변환 */
+    letter-spacing: 1px;
+}
+
+
+/* --- 구분선 --- */
+.divider-small {
+    width: 30px;
+    border-top: 1px solid #ddd;
+    margin: 20px auto;
+}
+
+
+/* --- 혼주(부모님) 영역 --- */
+.parents-section {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around; /* 양쪽으로 적당히 벌림 */
+    text-align: center;
+}
+
+.parents-group {
+    width: 45%; /* 반반씩 차지 */
+}
+
+.family-label {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.parents-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* 아버지 어머니 사이 간격 */
+}
+
+.parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 부모님 사진은 조금 더 작게 */
+.parent-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+    background-color: #eee; /* 사진 없을 때 회색 배경 */
+}
+
+.p-name {
+    font-size: 13px;
+    color: #555;
+}
+
+/* 지도 영역 전체 */
+.map-section {
+    margin: 30px 20px;
+    text-align: center;
+}
+
+/* 주소 텍스트 */
+.address-text {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+    word-break: keep-all; /* 단어 단위 줄바꿈 */
+}
+
+/* 지도 이미지 틀 */
+.map-image-frame {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.map-image-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 버튼들을 감싸는 박스 */
+.nav-buttons {
+    display: flex;
+    gap: 10px; /* 버튼 사이 간격 */
+    justify-content: center;
+}
+
+/* 버튼 공통 디자인 */
+.nav-buttons a {
+    text-decoration: none; /* 밑줄 제거 */
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    flex: 1; /* 너비 똑같이 배분 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.2s; /* 눌렀을 때 부드럽게 */
+}
+
+.nav-buttons a:active { opacity: 0.7; }
+
+/* 각 버튼별 색상 */
+.btn-naver {
+    background-color: #03C75A; /* 네이버 초록색 */
+    color: white;
+}
+
+.btn-kakao {
+    background-color: #FEE500; /* 카카오 노란색 */
+    color: #3c1e1e; /* 카카오 갈색 글씨 */
+}
+
+.btn-tel {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+/* style.css 추가 */
+
+/* 날짜 강조 */
+.date-point {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333; /* 진한 회색 */
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+/* 시간 강조 */
+.time-point {
+    font-size: 18px;
+    color: #d4a373; /* 고급스러운 베이지/골드 톤 */
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+/* 중간 미니 구분선 */
+.divider-mini {
+    width: 20px;
+    border-top: 1px solid #ddd;
+    margin: 15px auto;
+}
+
+.box-title {
+    color: #d4a373; /* 고급스러운 골드/베이지 톤 (포인트 컬러) */
+    font-size: 15px;
+    letter-spacing: 2px; /* 글자 간격 넓게 */
+    font-weight: bold;
+    margin: 0 0 25px 0; /* 아래 내용과 간격 띄우기 */
+    text-transform: uppercase;
+}
+
+/* 홀 이름 (그랜드볼룸) 따로 강조 */
+.hall-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 5px 0;
+}
+
+/* 기존 info-box에 약간의 여백 추가 (제목 때문에) */
+.info-box {
+    padding-top: 40px; /* 위쪽 여백을 좀 더 줌 */
+}
+
+/* style.css 추가 */
+
+/* 섹션 공통 타이틀 */
+.section-title {
+    color: #d4a373;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 40px 0 20px 0;
+    text-align: center;
+}
+
+/* --- 1. 타임라인 --- */
+.timeline-box {
+    padding: 0 20px;
+}
+.story {
+    margin-bottom: 40px;
+    position: relative;
+    padding-left: 20px;
+    border-left: 1px solid #ddd; /* 왼쪽 세로선 */
+}
+.year {
+    font-weight: bold;
+    color: #d4a373;
+    font-size: 18px;
+    margin-bottom: 10px;
+    background: white;
+    display: inline-block;
+    padding-right: 10px;
+}
+.story img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.story h3 { font-size: 16px; margin: 5px 0; color: #333; }
+.story p { font-size: 13px; color: #777; margin: 0; }
+
+/* --- 2. 갤러리 --- */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3열로 배치 */
+    gap: 5px; /* 사진 사이 간격 */
+    padding: 0 5px;
+}
+.gallery-grid img {
+    width: 100%;
+    height: 100px; /* 정사각형 느낌 */
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* --- 3. 방명록 --- */
+.guestbook-section { padding: 0 20px; }
+.input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.input-area input, .input-area textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+}
+.btn-submit {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.comment-list { margin-top: 20px; text-align: left; }
+.comment-item {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+.comment-name { font-weight: bold; margin-right: 5px; }
+
+/* --- 4. 계좌번호 (아코디언) --- */
+.account-section { padding: 0 20px 50px 20px; }
+.acc-details { margin-bottom: 10px; }
+.acc-summary {
+    padding: 15px;
+    border-radius: 8px;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none; /* 화살표 제거 */
+    text-align: center;
+}
+.acc-summary::-webkit-details-marker { display: none; } /* 크롬 화살표 제거 */
+
+.groom-bg { background-color: #e3f2fd; } /* 신랑측 연한 파랑 */
+.bride-bg { background-color: #fce4ec; } /* 신부측 연한 분홍 */
+
+.acc-content {
+    background: #f9f9f9;
+    padding: 15px;
+    margin-top: 5px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+.acc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+.acc-who { font-weight: bold; width: 60px; }
+.acc-num { color: #555; flex: 1; margin: 0 10px; word-break: break-all; }
+.btn-copy {
+    background: #fff;
+    border: 1px solid #ccc;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* style.css 맨 아래 추가 */
+
+.loading-msg { text-align: center; color: #999; padding: 20px; }
+
+/* 입력창 배치 수정 */
+.input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+/* 이름과 비번을 가로로 배치 */
+.input-row { display: flex; gap: 5px; } 
+
+#gName, #gPw { 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px;
+    font-size: 14px;
+}
+#gMsg { 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    height: 80px; 
+    resize: none; 
+}
+
+/* 댓글 목록 스타일 */
+.comment-item {
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 5px;
+}
+.c-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.c-name { font-weight: bold; color: #333; font-size: 14px; }
+.c-date { color: #aaa; font-size: 11px; }
+.c-msg { color: #555; font-size: 13px; line-height: 1.4; white-space: pre-wrap; }
+
+
+/* style.css 수정 */
+
+/* 댓글 목록창: 300px 높이 고정하고 넘치면 스크롤 생김 */
+.comment-list { 
+    margin-top: 20px; 
+    text-align: left;
+    max-height: 300px;  /* 이 높이를 넘으면 */
+    overflow-y: auto;   /* 자동으로 스크롤바 생성 */
+    border: 1px solid #eee;
+    background: #fdfdfd;
+    border-radius: 5px;
+}
+
+/* 댓글 아이템 (삭제 버튼 위치 잡기 위해 relative 설정) */
+.comment-item {
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 10px;
+    position: relative; /* 삭제 버튼 위치 기준점 */
+}
+
+/* style.css 수정 */
+
+.comment-item {
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    
+    /* [중요] 아래쪽 패딩을 35px로 늘려서 '삭제' 버튼이 들어갈 자리를 확보합니다 */
+    padding: 15px 10px 35px 10px; 
+    
+    position: relative; /* 삭제 버튼 위치의 기준점 */
+}
+
+/* 삭제 버튼 스타일 */
+.btn-del {
+    position: absolute;
+    
+    /* 위치 변경: 위(top) 대신 아래(bottom) 기준으로 배치 */
+    top: auto;      
+    bottom: 10px;   /* 바닥에서 10px 위로 */
+    right: 10px;    /* 오른쪽에서 10px 안쪽 */
+    
+    background: none;
+    border: none;
+    color: #ccc;    /* 아주 연한 회색 (평소엔 잘 안 보이게) */
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* 마우스 올렸을 때 */
+.btn-del:hover {
+    color: #ff6b6b; /* 붉은색 포인트 */
+    text-decoration: underline;
+}
+
+/* style.css 수정 */
+
+.music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    
+    /* [수정됨] 검정(0,0,0) -> 진한 회색(80,80,80)으로 변경 */
+    background-color: rgba(80, 80, 80, 0.5); 
+    
+    backdrop-filter: blur(2px);
+    border-radius: 50%;
+    z-index: 10000;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 마우스 올렸을 때 */
+.music-btn:hover {
+    background-color: rgba(80, 80, 80, 0.7); /* 조금 더 진해짐 */
+}
+
+/* 노래가 나올 때 (켜짐 상태) */
+.music-playing {
+    /* 켜졌을 때도 너무 까맣지 않게 유지 */
+    background-color: rgba(80, 80, 80, 0.6); 
+}
+
+/* SVG 아이콘 크기 */
+.music-btn svg {
+    width: 20px; /* 아이콘 크기도 살짝 줄여서 여백을 줌 (더 세련됨) */
+    height: 20px;
+    display: block;
 }
