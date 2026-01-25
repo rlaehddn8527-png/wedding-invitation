@@ -74,81 +74,125 @@ hr {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 살짝 그림자 */
 }
 
-/* style.css 맨 아래 추가 */
+/* style.css 맨 아래 (기존 인트로 CSS 삭제 후 붙여넣기) */
 
-/* ========== 인트로 화면 스타일 ========== */
+/* 인트로 전체 컨테이너 */
 .intro-screen {
-    position: fixed;       /* 화면에 고정해서 스크롤 막기 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;         /* 화면 전체 높이 */
-    background-image: url('images/intro.jpg'); /* 배경 사진 경로 확인! */
-    background-size: cover;    /* 사진이 화면을 가득 채우게 */
-    background-position: center; /* 사진 중앙 정렬 */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background-color: black; /* 사진 없을 때 검은 배경 */
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;         /* 제일 위에 보이게 설정 */
-    color: white;          /* 글씨 색상 (사진에 따라 변경 가능) */
+    flex-direction: column;
 }
 
-/* 배경을 약간 어둡게 해서 글씨 잘 보이게 하기 (선택사항) */
-.intro-screen::before {
-    content: '';
+/* 배경 슬라이드 공통 설정 */
+.bg-slide {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* 검은색 투명도 30% */
-    z-index: -1;
-}
-
-.intro-content {
-    text-align: center;
-    /* 텍스트 등장 애니메이션 적용 (1.5초 동안 부드럽게 나타남) */
-    animation: fadeInUp 1.5s ease-out forwards;
+    background-size: cover;
+    background-position: center;
     opacity: 0; /* 처음엔 안 보이게 */
 }
 
-.intro-text {
-    font-family: 'Great Vibes', cursive; /* 아까 가져온 예쁜 폰트 */
-    font-size: 80px;       /* 글씨 크기 */
-    margin: 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* 그림자 효과 */
+/* 각 사진별 이미지 연결 및 애니메이션 시간차 공격 */
+.slide-1 {
+    background-image: url('images/story1.jpg');
+    animation: fadeShow 3s ease-in-out forwards; /* 0초~3초 */
+    animation-delay: 0s;
 }
 
-.intro-subtext {
+.slide-2 {
+    background-image: url('images/story2.jpg');
+    animation: fadeShow 3s ease-in-out forwards; /* 3초~6초 */
+    animation-delay: 3s;
+}
+
+.slide-3 {
+    background-image: url('images/story3.jpg');
+    animation: finalShow 4s ease-in-out forwards; /* 6초~끝까지 유지 */
+    animation-delay: 6s;
+}
+
+/* 배경 어둡게 까는 막 (마지막 사진 위에 덮음) */
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    opacity: 0;
+    animation: fadeInOverlay 2s forwards;
+    animation-delay: 7s; /* 3번째 사진 나오고 1초 뒤에 어두워짐 */
+}
+
+/* 글씨 컨테이너 */
+.intro-content {
+    position: relative;
+    z-index: 10;
+    color: white;
+    text-align: center;
+}
+
+/* 타자 치는 효과가 들어갈 텍스트 */
+.typing-text {
+    font-family: 'Noto Sans KR', serif;
+    font-size: 32px;
+    overflow: hidden; /* 글자가 늘어나는 동안 나머지는 숨김 */
+    white-space: nowrap; /* 줄바꿈 금지 */
+    width: 0; /* 처음엔 길이가 0 */
+    border-right: 2px solid white; /* 커서 깜빡임 효과 */
+    
+    /* 타자 애니메이션 실행 */
+    animation: 
+        typing 2s steps(10) forwards, 
+        blink .75s step-end infinite;
+    
+    animation-delay: 8s; /* 사진 다 지나가고 8초부터 글씨 시작 */
+}
+
+.names {
+    font-family: 'Great Vibes', cursive;
     font-size: 24px;
+    opacity: 0;
     margin-top: 10px;
-    letter-spacing: 3px;
+    animation: fadeInText 2s forwards;
+    animation-delay: 10s; /* '저희 결혼합니다' 다 쓰고 난 뒤 등장 */
 }
 
-/* 인트로 화면이 사라지는 애니메이션 클래스 */
+/* --- 키프레임 (애니메이션 동작 정의) --- */
+
+/* 사진이 나타났다가 사라짐 (1, 2번 사진용) */
+@keyframes fadeShow {
+    0% { opacity: 0; transform: scale(1); }
+    20% { opacity: 1; transform: scale(1.05); } /* 살짝 확대되면서 등장 */
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* 마지막 사진은 사라지지 않고 계속 유지 */
+@keyframes finalShow {
+    0% { opacity: 0; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
+}
+
+/* 어두운 막 등장 */
+@keyframes fadeInOverlay { to { opacity: 1; } }
+
+/* 텍스트 등장 */
+@keyframes fadeInText { to { opacity: 1; } }
+
+/* 타자 치는 효과 (너비를 0에서 100%로 늘림) */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; border-right-color: transparent; } /* 다 치면 커서 없앰 */
+}
+
+/* 인트로 화면 전체 퇴장 */
 .fade-out {
-    animation: fadeOutScreen 1s ease-in forwards;
+    animation: fadeOutScreen 1.5s ease-in forwards;
 }
 
-
-/* ========== 애니메이션 정의 (키프레임) ========== */
-
-/* 텍스트가 아래에서 위로 떠오르는 효과 */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px); /* 아래로 30px 내려가 있음 */
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);    /* 원래 위치로 */
-    }
-}
-
-/* 화면 전체가 서서히 사라지는 효과 */
 @keyframes fadeOutScreen {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-        visibility: hidden; /* 완전히 안 보이게 처리 */
-    }
+    to { opacity: 0; visibility: hidden; }
 }
