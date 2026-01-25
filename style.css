@@ -1,0 +1,64 @@
+/* 기본 초기화 */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f0f2f5; /* PC 배경색 (연한 회색) */
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* 모바일 프레임 (스마트폰처럼 보이게 제한) */
+.container {
+    width: 100%;
+    max-width: 420px; /* 큰 스마트폰 사이즈 */
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    min-height: 100vh;
+}
+
+.card {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.intro {
+    color: #888;
+    letter-spacing: 2px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 36px;
+    color: #333;
+    margin: 10px 0 40px 0;
+    font-family: serif; /* 명조체 계열 */
+}
+
+.heart { color: #ff6b6b; }
+
+.info-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 30px 0;
+    border-radius: 8px;
+}
+
+.date { font-weight: bold; font-size: 18px; color: #333; }
+.time { color: #555; margin-bottom: 10px;}
+.location { color: #666; font-size: 15px; }
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 40px 20px;
+}
+
+.message {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+}
