@@ -17,6 +17,16 @@ body {
     background-color: white;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
     min-height: 100vh;
+    margin: 0 auto;
+
+    /* [2. 새로 추가된 애니메이션 설정] */
+    opacity: 0; /* 처음에 투명하게 숨김 */
+    transition: opacity 1.5s ease-in; /* 1.5초 동안 서서히 나타남 */
+
+}
+
+.container.show-main {
+    opacity: 1; /* 불투명하게(보이게) 변경 */
 }
 
 .card {
@@ -97,7 +107,7 @@ hr {
     overflow: hidden;
     z-index: 9999;
     
-    /* ★ 추가된 부분: 플렉스박스로 중앙 정렬 (흔들림 방지) */
+    /* ★ 핵심: 플렉스박스 사용 */
     display: flex;
     justify-content: center; /* 가로 중앙 */
     align-items: center;     /* 세로 중앙 */
@@ -157,55 +167,27 @@ hr {
 }
 
 /* 글씨 컨테이너 */
-/* style.css 수정 */
 
-.intro-content {
-    text-align: center;
-    color: white;
-    z-index: 100;
-    
-    /* 투명했다가 나타나는 설정은 유지 */
-    opacity: 0;
-    animation: fadeInUp 2s ease-out forwards;
-    animation-delay: 4s; 
-}
-
-/* 타자 치는 효과가 들어갈 텍스트 */
-.typing-text {
-    font-family: 'Noto Sans KR', serif;
-    font-size: 32px;
-    overflow: hidden; /* 글자가 늘어나는 동안 나머지는 숨김 */
-    white-space: nowrap; /* 줄바꿈 금지 */
-    width: 0; /* 처음엔 길이가 0 */
-    border-right: 2px solid white; /* 커서 깜빡임 효과 */
-    
-    /* 타자 애니메이션 실행 */
-    animation: 
-        typing 2s steps(10) forwards, 
-        blink .75s step-end infinite;
-    
-    animation-delay: 8s; /* 사진 다 지나가고 8초부터 글씨 시작 */
-}
 /* style.css 수정 */
 
 /* 텍스트가 담긴 전체 박스 */
 .intro-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* 정중앙 배치 */
-    text-align: center;
-    color: white;
-    z-index: 100; /* 사진보다 위에 있어야 함 */
+    /* 기존에 있던 position: absolute 관련 코드를 다 무시하기 위해 relative로 변경 */
+    position: relative; 
+    width: 100%;       /* 화면 가로 꽉 채우기 */
+    text-align: center; /* 글자 가운데 정렬 */
     
-    /* ★ 핵심: 처음에 투명하게 숨김 */
+    z-index: 100;
+    color: white;
+    
+    /* 처음에 투명 */
     opacity: 0;
     
-    /* 3번째 사진(4초)과 똑같이 4초 뒤에 나타남 */
-    animation: fadeInUp 2s ease-out forwards;
+    /* ★ 타이밍 수정: 2초(너무 느림) -> 1.5초(빠릿하게) */
+    /* 3번째 사진 나오는 시간(4초)에 딱 맞춰서 시작 */
+    animation: fadeInUp 1.5s ease-out forwards;
     animation-delay: 4s; 
 }
-
 /* We Marry 글씨 스타일 */
 .main-title {
     font-family: 'Great Vibes', cursive; /* 필기체 폰트 (있다면) */
@@ -232,14 +214,13 @@ hr {
 @keyframes fadeInUp {
     0% {
         opacity: 0;
-        transform: translateY(20px); /* 20px 아래에서 시작 */
+        transform: translateY(30px); /* 30px 아래에서 시작 */
     }
     100% {
         opacity: 1;
-        transform: translateY(0);    /* 제자리로 (가로 이동 없음!) */
+        transform: translateY(0);    /* 제자리로 쏙 들어옴 */
     }
 }
-
 /* 사진이 나타났다가 사라짐 (1, 2번 사진용) */
 @keyframes fadeShow {
     0% { opacity: 0; transform: scale(1); }

@@ -1,21 +1,23 @@
 window.addEventListener('load', () => {
     const introScreen = document.getElementById('introScreen');
+    const mainContainer = document.querySelector('.container');
 
-    // 총 재생 시간: 7초 (7000ms)
-    // 0~2초: 사진1
-    // 2~4초: 사진2
-    // 4~6초: 사진3 + 글씨 타이핑
-    // 6~7초: 감상 (1초)
-    // 7초: 종료
-    
+    // 1. 인트로 재생 (7초 동안 유지)
     setTimeout(() => {
+        
+        // 2. 7초 땡! 하면 인트로 화면 페이드 아웃 (서서히 사라짐)
         introScreen.classList.add('fade-out');
         
+        // 3. 페이드 아웃 애니메이션 시간(1초)만큼 기다렸다가
         setTimeout(() => {
-             introScreen.style.display = 'none';
-        }, 1000); // 페이드아웃은 1초 정도로 짧고 굵게
+            introScreen.style.display = 'none'; // 인트로 아예 삭제
+            
+            // ★ 4. 인트로가 완전히 꺼지면 -> 그때 메인 화면 등장!
+            mainContainer.classList.add('show-main');
+            
+        }, 1000); // 1초 대기 (fade-out 시간과 맞춤)
 
-    }, 7000); // ★ 여기를 7000으로 수정
+    }, 7000); // 7초 뒤 시작
 });
 
 function copyText(text) {
