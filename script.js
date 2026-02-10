@@ -2,22 +2,21 @@ window.addEventListener('load', () => {
     const introScreen = document.getElementById('introScreen');
     const mainContainer = document.querySelector('.container');
 
-    // 1. 인트로 재생 (7초 동안 유지)
+    // 4.5초 뒤 (사진4+글씨가 다 나오고 읽을 때쯤)
     setTimeout(() => {
         
-        // 2. 7초 땡! 하면 인트로 화면 페이드 아웃 (서서히 사라짐)
+        // 1. 인트로 화면 사라지기 시작 (투명해짐)
         introScreen.classList.add('fade-out');
         
-        // 3. 페이드 아웃 애니메이션 시간(1초)만큼 기다렸다가
+        // ★ 핵심: 인트로가 사라지는 "동시에" 메인 화면도 나타나게 함 (기다리지 않음!)
+        mainContainer.classList.add('show-main');
+        
+        // 2. 1초 뒤에 인트로 화면을 아예 삭제 (뒷정리)
         setTimeout(() => {
-            introScreen.style.display = 'none'; // 인트로 아예 삭제
-            
-            // ★ 4. 인트로가 완전히 꺼지면 -> 그때 메인 화면 등장!
-            mainContainer.classList.add('show-main');
-            
-        }, 1000); // 1초 대기 (fade-out 시간과 맞춤)
+            introScreen.style.display = 'none'; 
+        }, 1000); 
 
-    }, 7000); // 7초 뒤 시작
+    }, 3400); // 3.4초 타이밍
 });
 
 function copyText(text) {
@@ -86,3 +85,97 @@ document.body.addEventListener('click', function firstClick() {
     // 한 번 실행되면 삭제 (계속 켜지면 안 되니까)
     document.body.removeEventListener('click', firstClick);
 }, { once: true });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* 1. 인트로 설정 (기존 코드 유지) */
+    const introScreen = document.getElementById('introScreen');
+    const mainContainer = document.querySelector('.container');
+    setTimeout(() => {
+        if(introScreen) introScreen.classList.add('fade-out');
+        if(mainContainer) mainContainer.classList.add('show-main');
+        setTimeout(() => { if(introScreen) introScreen.style.display = 'none'; }, 1000);
+    }, 6000);
+
+
+    /* 2. 갤러리 변수 설정 */
+    const slider = document.querySelector('.gallery-slider');
+    const slides = document.querySelectorAll('.gallery-slide');
+    const dots = document.querySelectorAll('.dot');
+    const mainPrev = document.querySelector('.main-prev'); // 메인 왼쪽 화살표
+    const mainNext = document.querySelector('.main-next'); // 메인 오른쪽 화살표
+
+
+    /* 3. 하트 도트 & 스크롤 감지 기능 */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = Array.from(slides).indexOf(entry.target);
+                dots.forEach(d => d.classList.remove('active'));
+                if(dots[index]) dots[index].classList.add('active');
+            }
+        });
+    }, { root: slider, threshold: 0.5 });
+    slides.forEach(slide => observer.observe(slide));
+
+    // 하트 클릭 시 이동
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const slideWidth = slider.clientWidth;
+            slider.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
+        });
+    });
+
+
+    /* 4. 메인 화살표 클릭 기능 (슬라이드 넘기기) */
+    if (mainPrev && mainNext) {
+        mainPrev.addEventListener('click', () => {
+            slider.scrollBy({ left: -slider.clientWidth, behavior: 'smooth' });
+        });
+        mainNext.addEventListener('click', () => {
+            slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
+        });
+    }
+
+
+    /* 5. 팝업(라이트박스) 기능 */
+    const allImages = document.querySelectorAll('.gallery-slider img'); // 모든 사진 찾기
+    const modal = document.getElementById('photoModal');
+    const modalImg = document.getElementById('modalImg');
+    const closeBtn = document.querySelector('.close-btn');
+    const modalPrev = document.querySelector('.prev-btn'); // 팝업 내부 화살표
+    const modalNext = document.querySelector('.next-btn'); // 팝업 내부 화살표
+    let currentPhotoIndex = 0;
+
+    // (1) 사진 클릭 시 팝업 열기
+    allImages.forEach((img, index) => {
+        img.addEventListener('click', () => {
+            if(modal) {
+                modal.style.display = 'flex';
+                modalImg.src = img.src;
+                currentPhotoIndex = index;
+            }
+        });
+    });
+
+    // (2) 팝업 닫기
+    const closeModal = () => { if(modal) modal.style.display = 'none'; };
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // (3) 팝업 내부 사진 변경
+    const updateModalImage = (index) => {
+        if (index < 0) currentPhotoIndex = allImages.length - 1;
+        else if (index >= allImages.length) currentPhotoIndex = 0;
+        else currentPhotoIndex = index;
+        modalImg.src = allImages[currentPhotoIndex].src;
+    };
+
+    if(modalPrev) modalPrev.addEventListener('click', (e) => {
+        e.stopPropagation(); updateModalImage(currentPhotoIndex - 1);
+    });
+    if(modalNext) modalNext.addEventListener('click', (e) => {
+        e.stopPropagation(); updateModalImage(currentPhotoIndex + 1);
+    });
+});

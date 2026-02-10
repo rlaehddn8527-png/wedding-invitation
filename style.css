@@ -53,12 +53,6 @@ h1 {
     gap: 10px;         /* 이름과 하트 사이 간격 */
 }
 
-.heart {
-    color: #ff6b6b;
-    font-size: 36px;   /* 하트는 이름보다 훨씬 크게 (36px) */
-    line-height: 1;    /* 하트 높이 간격 조정 */
-    margin-top: -5px;  /* 시각적으로 중앙에 오도록 미세 조정 */
-}
 
 .info-box {
     border: 1px solid #ddd;
@@ -94,99 +88,92 @@ hr {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 살짝 그림자 */
 }
 
-/* style.css 맨 아래 (기존 인트로 CSS 삭제 후 붙여넣기) */
+/* style.css 수정 */
 
-/* 인트로 전체 컨테이너 */
-
+/* [1] 인트로 화면 전체 틀 */
 .intro-screen {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
     z-index: 9999;
     
-    /* ★ 핵심: 플렉스박스 사용 */
-    display: flex;
-    justify-content: center; /* 가로 중앙 */
-    align-items: center;     /* 세로 중앙 */
-}
-/* style.css 수정 */
-
-/* 공통 설정: 처음에 안 보이게 숨김 */
-.bg-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0; /* ★ 중요: 처음에 투명해야 함 */
-}
-
-/* 첫 번째 사진: 0초에 시작 */
-.slide-1 {
-    background-image: url('images/story1.jpg');
-    animation: fadeShow 3s ease-in-out forwards; /* 애니메이션 필수! */
-    animation-delay: 0s;
-    z-index: 1; /* 제일 밑에 깔림 */
-}
-
-/* 두 번째 사진: 2초 뒤에 등장 */
-.slide-2 {
-    background-image: url('images/story2.jpg');
-    animation: fadeShow 3s ease-in-out forwards; /* ★ 이 줄이 빠졌었습니다 */
-    animation-delay: 2s;
-    z-index: 2; /* 1번 위에 덮어씀 */
-}
-
-/* 세 번째 사진: 4초 뒤에 등장 */
-.slide-3 {
-    background-image: url('images/story3.jpg');
-    animation: fadeShow 3s ease-in-out forwards; /* ★ 이 줄이 빠졌었습니다 */
-    animation-delay: 4s;
-    z-index: 3; /* 제일 위에 덮어씀 */
-}
-
-/* (혹시 없으실까봐) 페이드인 애니메이션 정의 */
-@keyframes fadeShow {
-    0% { opacity: 0; transform: scale(1.0); }
-    100% { opacity: 1; transform: scale(1.05); } /* 살짝 커지면서 등장 */
-}
-
-/* 배경 어둡게 까는 막 (마지막 사진 위에 덮음) */
-.overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.4);
-    opacity: 0;
-    animation: fadeInOverlay 2s forwards;
-    animation-delay: 7s; /* 3번째 사진 나오고 1초 뒤에 어두워짐 */
-}
-
-/* 글씨 컨테이너 */
-
-/* style.css 수정 */
-
-/* 텍스트가 담긴 전체 박스 */
-.intro-content {
-    /* 기존에 있던 position: absolute 관련 코드를 다 무시하기 위해 relative로 변경 */
-    position: relative; 
-    width: 100%;       /* 화면 가로 꽉 채우기 */
-    text-align: center; /* 글자 가운데 정렬 */
+    /* ★ 수정: 배경을 검정이 아니라 흰색(또는 투명)으로 */
+    /* 사진이 사라질 때 뒤에 메인화면(흰색)이 자연스럽게 배어나오게 함 */
+    background-color: transparent; 
     
-    z-index: 100;
-    color: white;
+    /* 사라질 때 효과 */
+    transition: opacity 1s ease-out;
+}
+
+/* 인트로가 사라질 때 투명도 0 */
+.intro-screen.fade-out {
+    opacity: 0;
+}
+
+/* [2] 메인 화면 (.container) */
+.container {
+    /* (기존 크기/정렬 코드 유지) */
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    background-color: white;
+    min-height: 100vh;
     
     /* 처음에 투명 */
     opacity: 0;
     
-    /* ★ 타이밍 수정: 2초(너무 느림) -> 1.5초(빠릿하게) */
-    /* 3번째 사진 나오는 시간(4초)에 딱 맞춰서 시작 */
-    animation: fadeInUp 1.5s ease-out forwards;
-    animation-delay: 4s; 
+    /* 나타날 때 효과 (인트로 사라지는 속도 1초와 맞춤) */
+    transition: opacity 1s ease-in;
+}
+
+/* JS가 붙여주는 클래스 */
+.container.show-main {
+    opacity: 1; /* 즉시 보임 */
+}
+/* --- [2] 배경 사진들 (공통) --- */
+.bg-slide {
+    position: absolute;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0; /* 처음에 안 보임 */
+    
+    /* 모든 사진 1초 동안 부드럽게 등장 */
+    animation: fadeShow 1s ease-in-out forwards; 
+}
+
+/* 사진별 시간차 (0.7초 간격) */
+.slide-1 { background-image: url('images/story1.jpg'); animation-delay: 0s;   z-index: 1; }
+.slide-2 { background-image: url('images/story2.jpg'); animation-delay: 0.8s; z-index: 2; }
+.slide-3 { background-image: url('images/story3.jpg'); animation-delay: 1.6s; z-index: 3; }
+.slide-4 { background-image: url('images/story4.jpg'); animation-delay: 2.4s; z-index: 4; }
+
+.intro-content {
+    /* [1] 위치 강제 지정: 사진 위에 덮어씌우기 */
+    position: absolute;  /* ★ 핵심: 이게 없으면 사진 밑에 숨습니다 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;        /* 화면 전체를 투명 유리판처럼 덮음 */
+    
+    /* [2] 순서 지정: 사진(z-index: 4)보다 무조건 높게 */
+    z-index: 9999;       /* ★ 핵심: 숫자가 아주 커야 맨 위에 보입니다 */
+    
+    /* [3] 정렬: 글씨를 화면 정중앙에 배치 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 세로 중앙 */
+    align-items: center;     /* 가로 중앙 */
+    
+    /* [4] 꾸미기 */
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7); /* 사진 위에서도 잘 보이게 그림자 */
+    
+    /* [5] 애니메이션: 4번 사진(2.1s)과 동시에 등장 */
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 2.4s; 
 }
 /* We Marry 글씨 스타일 */
 .main-title {
@@ -214,7 +201,7 @@ hr {
 @keyframes fadeInUp {
     0% {
         opacity: 0;
-        transform: translateY(30px); /* 30px 아래에서 시작 */
+        transform: translateY(20px); /* 30px 아래에서 시작 */
     }
     100% {
         opacity: 1;
@@ -258,33 +245,55 @@ hr {
 
 /* style.css 추가 */
 
-/* --- 신랑/신부 프로필 --- */
+/* 프로필 영역: 신랑 - 하트 - 신부 가로 배치 */
 .profile-section {
-    display: flex;           /* 가로 나란히 배치 */
-    justify-content: center; /* 중앙 정렬 */
-    gap: 40px;               /* 두 사람 사이 간격 */
-    margin: 30px 0;
+    display: flex;             /* 가로로 나란히 배치 */
+    justify-content: center;   /* 가로 가운데 정렬 */
+    align-items: center;       /* 세로 가운데 정렬 (하트 높이 맞춤) */
+    gap: 15px;                 /* 요소 사이 간격 */
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
+/* 개별 사람 (신랑/신부) */
 .person {
-    text-align: center;
+    text-align: center;        /* 텍스트 가운데 정렬 */
 }
 
-/* 동그란 프로필 사진 틀 */
+/* 이미지 동그라미 프레임 */
 .img-frame {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;      /* 완전 원형 */
-    overflow: hidden;        /* 사진이 튀어나오면 자름 */
-    margin: 0 auto 10px auto;
-    border: 3px solid #f0f0f0; /* 사진 테두리 (선택) */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 120px;              /* 사진 크기 */
+    height: 120px;
+    border-radius: 50%;        /* 완전 동그라미 */
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #eee;    /* 얇은 테두리 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .img-frame img {
     width: 100%;
     height: 100%;
-    object-fit: cover;       /* 비율 유지하며 꽉 채우기 */
+    object-fit: cover;         /* 사진 비율 유지하며 꽉 채움 */
+}
+/* 하트 스타일 */
+.heart {
+    font-size: 25px;           /* 하트 크기 */
+    color: #ff6b6b;            /* 사랑스러운 핑크색 */
+    margin-bottom: 40px;       /* ★ 중요: 이름/직책 때문에 하트가 처져 보일 수 있어서 위로 살짝 올림 */
+    position: relative;
+    top: -20px;
+    /* 콩닥콩닥 애니메이션 */
+    animation: heartbeat 1.2s infinite ease-in-out;
+}
+
+/* 하트 애니메이션 키프레임 */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.3); } /* 커짐 */
+    30% { transform: scale(1); }   /* 작아짐 */
+    45% { transform: scale(1.15); } /* 살짝 커짐 */
+    60% { transform: scale(1); }   /* 원래대로 */
 }
 
 .person h3 {
@@ -815,3 +824,144 @@ hr {
     height: 20px;
     display: block;
 }
+
+.gallery-slider {
+    display: flex;             /* 가로로 배치 */
+    overflow-x: auto;          /* 가로 스크롤 허용 */
+    scroll-snap-type: x mandatory; /* ★ 핵심: 가로로 딱딱 끊어서 넘기기 */
+    
+    width: 100%;
+    /* 스크롤바 숨기기 (깔끔하게) */
+    scrollbar-width: none; /* 파이어폭스 */
+    -ms-overflow-style: none; /* IE, 엣지 */
+}
+
+.gallery-slider::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리 */
+}
+
+/* 각 슬라이드 (9장 묶음) */
+.gallery-slide {
+    flex: 0 0 100%; /* 화면 너비 100% 차지 (줄어들지 않음) */
+    scroll-snap-align: start; /* 스크롤할 때 시작점에 딱 붙음 */
+    padding: 0 10px; /* 양옆 여백 */
+    box-sizing: border-box;
+}
+
+/* 9장 그리드 (3x3 배치) */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3열 */
+    gap: 5px; /* 사진 사이 간격 */
+    margin-bottom: 20px;
+}
+
+/* 갤러리 사진 스타일 */
+.gallery-grid img {
+    width: 100%;
+    /* 사진을 정사각형으로 강제하고 싶다면 아래 height 추가 */
+    height: 100px; /* 또는 aspect-ratio: 1/1; */
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* style.css 수정 (하단부) */
+
+/* 하트 컨테이너 */
+.slider-dots {
+    text-align: center;
+    margin-top: 15px;    /* 갤러리와 간격 */
+    margin-bottom: 30px; /* 아래 여백 */
+}
+
+/* 기본 하트 스타일 (꺼진 상태) */
+.dot {
+    display: inline-block;
+    font-size: 24px;     /* 하트 크기 키움 */
+    color: #ddd;         /* 기본 회색 (꺼진 색) */
+    margin: 0 5px;       /* 하트 사이 간격 */
+    cursor: pointer;     /* 클릭 가능 커서 */
+    transition: all 0.3s ease; /* 색상이 부드럽게 변하도록 설정 */
+}
+
+/* 활성화된 하트 (켜진 상태) */
+.dot.active {
+    color: #ff6b6b;      /* 핑크색 (켜진 색) */
+    transform: scale(1.2); /* 활성화되면 살짝 커짐 */
+}
+
+/* (선택사항) 마우스 올렸을 때 살짝 반응하기 */
+.dot:hover {
+    color: #ffaaaa;
+}
+
+/* style.css 맨 아래에 추가 */
+
+/* --- [1] 메인 갤러리 양옆 화살표 --- */
+.main-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    background-color: rgba(255, 255, 255, 0.7); /* 반투명 흰색 배경 */
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+    z-index: 10; /* 사진보다 위에 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-prev { left: 5px; }
+.main-next { right: 5px; }
+
+.main-arrow:hover {
+    background-color: white;
+    color: #ff6b6b;
+}
+
+
+/* --- [2] 팝업창(모달) 스타일 --- */
+.photo-modal {
+    display: none; /* 평소엔 숨김 */
+    position: fixed;
+    z-index: 99999; /* 무조건 맨 위에 */
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.95); /* 아주 진한 검정 */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+/* 팝업 닫기 버튼 */
+.close-btn {
+    position: absolute;
+    top: 20px; right: 30px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 100000;
+}
+
+/* 팝업 내부 화살표 */
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 40px;
+    padding: 20px;
+    cursor: pointer;
+    z-index: 100000;
+}
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
