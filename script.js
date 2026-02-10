@@ -4,17 +4,17 @@ window.addEventListener('load', () => {
 
     // 4.5초 뒤 (사진4+글씨가 다 나오고 읽을 때쯤)
     setTimeout(() => {
-        
+
         // 1. 인트로 화면 사라지기 시작 (투명해짐)
         introScreen.classList.add('fade-out');
-        
+
         // ★ 핵심: 인트로가 사라지는 "동시에" 메인 화면도 나타나게 함 (기다리지 않음!)
         mainContainer.classList.add('show-main');
-        
+
         // 2. 1초 뒤에 인트로 화면을 아예 삭제 (뒷정리)
         setTimeout(() => {
-            introScreen.style.display = 'none'; 
-        }, 1000); 
+            introScreen.style.display = 'none';
+        }, 1000);
 
     }, 3400); // 3.4초 타이밍
 });
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const introScreen = document.getElementById('introScreen');
     const mainContainer = document.querySelector('.container');
     setTimeout(() => {
-        if(introScreen) introScreen.classList.add('fade-out');
-        if(mainContainer) mainContainer.classList.add('show-main');
-        setTimeout(() => { if(introScreen) introScreen.style.display = 'none'; }, 1000);
+        if (introScreen) introScreen.classList.add('fade-out');
+        if (mainContainer) mainContainer.classList.add('show-main');
+        setTimeout(() => { if (introScreen) introScreen.style.display = 'none'; }, 1000);
     }, 6000);
 
 
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.isIntersecting) {
                 const index = Array.from(slides).indexOf(entry.target);
                 dots.forEach(d => d.classList.remove('active'));
-                if(dots[index]) dots[index].classList.add('active');
+                if (dots[index]) dots[index].classList.add('active');
             }
         });
     }, { root: slider, threshold: 0.5 });
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // (1) 사진 클릭 시 팝업 열기
     allImages.forEach((img, index) => {
         img.addEventListener('click', () => {
-            if(modal) {
+            if (modal) {
                 modal.style.display = 'flex';
                 modalImg.src = img.src;
                 currentPhotoIndex = index;
@@ -160,9 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // (2) 팝업 닫기
-    const closeModal = () => { if(modal) modal.style.display = 'none'; };
-    if(closeBtn) closeBtn.addEventListener('click', closeModal);
-    if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    const closeModal = () => { if (modal) modal.style.display = 'none'; };
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
     // (3) 팝업 내부 사진 변경
     const updateModalImage = (index) => {
@@ -172,10 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
         modalImg.src = allImages[currentPhotoIndex].src;
     };
 
-    if(modalPrev) modalPrev.addEventListener('click', (e) => {
+    if (modalPrev) modalPrev.addEventListener('click', (e) => {
         e.stopPropagation(); updateModalImage(currentPhotoIndex - 1);
     });
-    if(modalNext) modalNext.addEventListener('click', (e) => {
+    if (modalNext) modalNext.addEventListener('click', (e) => {
         e.stopPropagation(); updateModalImage(currentPhotoIndex + 1);
     });
 });
