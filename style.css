@@ -12,6 +12,7 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    touch-action: pan-y;
 }
 
 /* 모바일 프레임 (스마트폰처럼 보이게 제한) */

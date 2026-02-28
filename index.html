@@ -263,105 +263,119 @@
                     <div class="loading-msg">데이터를 불러오는 중...</div>
                 </div>
             </div>
-            <script type="module">
-                // 1. 필요한 기능 더 많이 가져오기 (deleteDoc, doc, getDoc 추가됨)
-                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-                import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc }
-                    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc }
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-                // ★ 여기에 본인의 Firebase 설정 코드를 다시 넣어주세요! ★
-                const firebaseConfig = {
-                    apiKey: "AIzaSyBWpaK9yGtZBlETdFbrD1gMXHxFLGF5NKs",
-                    authDomain: "wedding-invitation-1f182.firebaseapp.com",
-                    projectId: "wedding-invitation-1f182",
-                    storageBucket: "wedding-invitation-1f182.firebasestorage.app",
-                    messagingSenderId: "13755905635",
-                    appId: "1:13755905635:web:6453ebc774c77a8dac6a56",
-                    measurementId: "G-ZJ5YNX2CJJ"
-                };
+    // 1. Firebase 설정
+    const firebaseConfig = {
+        apiKey: "AIzaSyBWpaK9yGtZBlETdFbrD1gMXHxFLGF5NKs",
+        authDomain: "wedding-invitation-1f182.firebaseapp.com",
+        projectId: "wedding-invitation-1f182",
+        storageBucket: "wedding-invitation-1f182.firebasestorage.app",
+        messagingSenderId: "13755905635",
+        appId: "1:13755905635:web:6453ebc774c77a8dac6a56",
+        measurementId: "G-ZJ5YNX2CJJ"
+    };
 
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-                // --- 글쓰기 기능 (기존과 동일) ---
-                document.getElementById("btnSave").addEventListener("click", async () => {
-                    const name = document.getElementById("gName").value;
-                    const pw = document.getElementById("gPw").value;
-                    const msg = document.getElementById("gMsg").value;
+    // 2. 글쓰기 기능 (에러 수정됨)
+    document.getElementById("btnSave").addEventListener("click", async () => {
+        const name = document.getElementById("gName").value;
+        const pw = document.getElementById("gPw").value;
+        const msg = document.getElementById("gMsg").value;
 
-                    if (!name || !msg || !pw) {
-                        alert("이름, 비밀번호, 내용을 모두 입력해주세요.");
-                        return;
-                    }
+        if (!name || !msg || !pw) {
+            alert("이름, 비밀번호, 내용을 모두 입력해주세요.");
+            return;
+        }
 
-                    try {
-                        await addDoc(collection(db, "guestbook"), {
-                            name: name,
-                            password: pw, // 삭제할 때 확인용
-                            message: msg,
-                            date: serverTimestamp()
-                        });
-                        alert("등록되었습니다!");
-                        document.getElementById("gMsg").value = ""; // 내용만 지워줌 (편의성)
-                    } catch (e) {
-                        console.error("Error", e);
-                        alert("저장 실패");
-                    }
-                });
+        try {
+            await addDoc(collection(db, "guestbook"), {
+                name: name,
+                password: pw,
+                message: msg,
+                date: serverTimestamp()
+            });
+            alert("등록되었습니다!");
+            // 입력창 초기화
+            document.getElementById("gName").value = "";
+            document.getElementById("gPw").value = "";
+            document.getElementById("gMsg").value = "";
+        } catch (e) {
+            console.error("Error adding document: ", e);
+            alert("저장 실패. 잠시 후 다시 시도해주세요.");
+        }
+    });
 
-                // --- 실시간 목록 보기 & 삭제 버튼 달기 ---
-                const q = query(collection(db, "guestbook"), orderBy("date", "desc"));
+    // 3. 실시간 목록 보기 & 삭제 버튼 생성
+    const q = query(collection(db, "guestbook"), orderBy("date", "desc"));
 
-                onSnapshot(q, (snapshot) => {
-                    const listDiv = document.getElementById("guestbook-list");
-                    listDiv.innerHTML = "";
+    onSnapshot(q, (snapshot) => {
+        const listDiv = document.getElementById("guestbook-list");
+        listDiv.innerHTML = ""; // 기존 '데이터를 불러오는 중...' 문구 지우기
 
-                    snapshot.forEach((document) => {
-                        const data = document.data();
-                        const docId = document.id; // 문서의 고유 ID (삭제할 때 필요)
-                        const dateStr = data.date ? new Date(data.date.seconds * 1000).toLocaleDateString() : "";
+        // 데이터가 없을 때 표시할 문구
+        if (snapshot.empty) {
+            listDiv.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>첫 번째 축하 메시지를 남겨주세요!</div>";
+            return;
+        }
 
-                        const itemHtml = `
-            <div class="comment-item">
-                <div class="c-header">
-                    <span class="c-name">${data.name}</span>
-                    <span class="c-date">${dateStr}</span>
+        snapshot.forEach((documentSnapshot) => {
+            const data = documentSnapshot.data();
+            const docId = documentSnapshot.id;
+            
+            // 날짜 변환 (에러 방지 처리 추가)
+            let dateStr = "";
+            if (data.date && data.date.seconds) {
+                const d = new Date(data.date.seconds * 1000);
+                // 2026.05.30 14:22 형식으로 깔끔하게 출력
+                dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            }
+
+            const itemHtml = `
+            <div class="comment-item" style="border-bottom:1px solid #eee; padding:15px 0; margin-bottom:10px; position:relative;">
+                <div class="c-header" style="margin-bottom:8px;">
+                    <strong class="c-name" style="font-size:16px; color:#333;">${data.name}</strong>
+                    <span class="c-date" style="font-size:12px; color:#999; margin-left:10px;">${dateStr}</span>
                 </div>
-                <div class="c-msg">${data.message}</div>
-                <button class="btn-del" onclick="window.deleteComment('${docId}')">삭제</button>
+                <div class="c-msg" style="font-size:14px; color:#555; line-height:1.5;">${data.message}</div>
+                <button class="btn-del" onclick="window.deleteComment('${docId}')" style="position:absolute; top:15px; right:0; background:none; border:none; color:#ff6b6b; font-size:12px; cursor:pointer;">삭제</button>
             </div>
-          `;
-                        listDiv.innerHTML += itemHtml;
-                    });
-                });
+            `;
+            listDiv.innerHTML += itemHtml;
+        });
+    });
 
-                // --- 삭제 기능 함수 (전역 window에 등록해야 HTML에서 클릭 가능) ---
-                window.deleteComment = async (id) => {
-                    const userPw = prompt("비밀번호를 입력하세요");
-                    if (!userPw) return;
+    // 4. 삭제 기능 (전역 함수로 등록)
+    window.deleteComment = async (id) => {
+        const userPw = prompt("등록할 때 입력한 비밀번호(4자리)를 입력하세요.");
+        if (!userPw) return;
 
-                    try {
-                        // 1. 해당 글의 정보를 가져옴
-                        const docRef = doc(db, "guestbook", id);
-                        const docSnap = await getDoc(docRef);
+        try {
+            const docRef = doc(db, "guestbook", id);
+            const docSnap = await getDoc(docRef);
 
-                        if (docSnap.exists()) {
-                            const realPw = docSnap.data().password;
-
-                            // 2. 비밀번호 비교
-                            if (userPw === realPw) {
-                                await deleteDoc(docRef); // 진짜 삭제
-                                alert("삭제되었습니다.");
-                            } else {
-                                alert("비밀번호가 틀렸습니다.");
-                            }
-                        }
-                    } catch (e) {
-                        console.error("Delete Error", e);
-                        alert("삭제 중 오류가 발생했습니다.");
-                    }
-                };
-            </script>
+            if (docSnap.exists()) {
+                const realPw = docSnap.data().password;
+                if (userPw === realPw) {
+                    await deleteDoc(docRef);
+                    alert("삭제되었습니다.");
+                } else {
+                    alert("비밀번호가 일치하지 않습니다.");
+                }
+            } else {
+                 alert("이미 삭제된 글입니다.");
+            }
+        } catch (e) {
+            console.error("Delete Error: ", e);
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+</script>
             <hr class="divider">
 
             <div class="account-section">
