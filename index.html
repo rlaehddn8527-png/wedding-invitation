@@ -336,14 +336,20 @@
                 dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
             }
 
-            const itemHtml = `
-            <div class="comment-item" style="border-bottom:1px solid #eee; padding:15px 0; margin-bottom:10px; position:relative;">
+const itemHtml = `
+            <div class="comment-item" style="border-bottom:1px solid #eee; padding:15px 0 10px 0; margin-bottom:10px;">
                 <div class="c-header" style="margin-bottom:8px;">
                     <strong class="c-name" style="font-size:16px; color:#333;">${data.name}</strong>
                     <span class="c-date" style="font-size:12px; color:#999; margin-left:10px;">${dateStr}</span>
                 </div>
-                <div class="c-msg" style="font-size:14px; color:#555; line-height:1.5;">${data.message}</div>
-                <button class="btn-del" onclick="window.deleteComment('${docId}')" style="position:absolute; top:15px; right:0; background:none; border:none; color:#ff6b6b; font-size:12px; cursor:pointer;">삭제</button>
+                
+                <div class="c-msg" style="font-size:14px; color:#555; line-height:1.5; margin-bottom:8px;">
+                    ${data.message}
+                </div>
+                
+                <div style="text-align: right;">
+                    <button class="btn-del" onclick="window.deleteComment('${docId}')" style="background:none; border:none; color:#aaa; font-size:12px; cursor:pointer; text-decoration:underline; padding:0;">삭제</button>
+                </div>
             </div>
             `;
             listDiv.innerHTML += itemHtml;
